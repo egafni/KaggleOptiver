@@ -3,7 +3,9 @@ name = "kaggleoptiver"
 version = "0.1.0"
 description = ""
 authors = ["Erik Gafni <egafni@gmail.com>"]
-
+packages = [
+    { include = "kgl" },
+]
 [tool.poetry.dependencies]
 python = "^3.9"
 pytorch-tabnet = "^3.1.1"
@@ -18,6 +20,9 @@ tqdm = "^4.64.0"
 jupyterlab = "^3.4.5"
 jupyter = "^1.0.0"
 importlib-resources = "^5.9.0"
+fastparquet = "^0.8.2"
+pyarrow = "^9.0.0"
+plotly = "^5.10.0"
 
 [tool.poetry.dev-dependencies]
 

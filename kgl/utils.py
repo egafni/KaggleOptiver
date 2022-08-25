@@ -6,7 +6,10 @@ from enum import Enum
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from joblib import delayed, Parallel
+
+DATA_DIR = '/kaggle/input'
 
 
 @contextmanager
@@ -169,6 +172,7 @@ def make_book_feature_v2(stock_id, block=DataBlock.TRAIN):
             price_list = prices.loc[tid].values.flatten()
             price_diff = sorted(np.diff(sorted(set(price_list))))
             ticks[tid] = price_diff[0]
+            # raise
         except Exception:
             print_trace(f'tid={tid}')
             ticks[tid] = np.nan
@@ -207,3 +211,21 @@ def make_features_v2(base, block):
 
     d = pd.merge(base, book_v2, on=['stock_id', 'time_id'], how='left')
     return d
+
+
+@contextmanager
+def timer(name: str):
+    s = time.time()
+    yield
+    elapsed = time.time() - s
+    print(f'[{name}] {elapsed: .3f}sec')
+
+
+def calculate_rank_correraltion(neighbors, top_n=5):
+    if not neighbors:
+        return
+    neighbor_indices = pd.DataFrame()
+    for n in neighbors:
+        neighbor_indices[n.name] = n.neighbors[:, :top_n].flatten()
+
+    sns.heatmap(neighbor_indices.corr('kendall'), annot=True)
